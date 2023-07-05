@@ -16,4 +16,14 @@ std::string LoadFile(std::string_view path)
         std::istreambuf_iterator<char>());
     return content;
 }
+
+bool TickTimer(float& tickBuffer, const float dt, const float tickRate)
+{
+    tickBuffer += dt;
+    if (tickBuffer>= tickRate)
+    {
+        return true;
+    }
+    return false;
+}
 } // namespace gpr5300

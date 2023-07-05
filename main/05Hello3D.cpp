@@ -212,7 +212,6 @@ namespace gpr5300
 		glUseProgram(program_);
 		glBindVertexArray(vao_);
 		dt2 += 2;
-		std::cout << dt2 << std::endl;
 
 		trans_ = glm::mat4(1.0f);
 		trans_ = glm::translate(trans_, glm::vec3(0.0f, 0.0f, 0.0f));
@@ -264,7 +263,7 @@ int main(int argc, char** argv)
 	gpr5300::HelloSquare scene_;
 	gpr5300::Engine engine(&scene_);
 	engine.Run();
-
-	return EXIT_SUCCESS;
+	std::cout << "end" << std::endl;
+	return 0;
 }
 
