@@ -93,6 +93,7 @@ namespace gpr5300
 
 			scene_->camProj_ = proj_;
 			scene_->camView_ = view_;
+			scene_->camPos_ = camera_->GetCameraPos();
 			//Manage SDL event
 
 			SDL_Event event;

@@ -18,6 +18,7 @@ namespace gpr5300
 
         glm::mat4 camProj_ = glm::mat4(1.0f);
         glm::mat4 camView_ = glm::mat4(1.0f);
+        glm::vec3 camPos_ = glm::vec3(1.0f);
     };
 
 } // namespace gpr5300

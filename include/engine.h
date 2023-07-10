@@ -19,7 +19,7 @@ private:
     void End();
     Scene* scene_ = nullptr;
     SDL_Window* window_ = nullptr;
-    Camera* camera_ = nullptr;
+    Camera* camera_;
     SDL_GLContext glRenderContext_{};
     glm::mat4 proj_ = glm::mat4(1.0f);
     glm::mat4 view_ = glm::mat4(1.0f);

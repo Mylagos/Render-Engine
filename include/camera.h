@@ -50,5 +50,6 @@ namespace gpr5300
 		void CameraPositionUpdate(float dt);
 		void CameraEventsKey(SDL_Event event, bool isDown);
 		void CameraMouseMovement(float mouseX, float mouseY, float dt);
+		glm::vec3 GetCameraPos() { return cameraPos_; }
 	};
 };
