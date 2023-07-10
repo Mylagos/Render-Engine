@@ -81,6 +81,8 @@ namespace gpr5300
 		const auto fragmentContent = LoadFile("data/shaders/hello_tutorial/3Dcube.frag");
 		const auto* fragmentShaderSource = fragmentContent.data();
 
+		GLenum err = glewInit();
+
 		vertexShader_ = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertexShader_, 1, &vertexShaderSource, nullptr);
 		glCompileShader(vertexShader_);
@@ -230,11 +232,11 @@ namespace gpr5300
 
 		for (unsigned int i = 0; i < 10; i++)
 		{
-			model_ = glm::mat4(1.0f);
+			/*model_ = glm::mat4(1.0f);
 			model_ = glm::translate(model_, cubePositions[i]);
 			float angle = 20.0f * i;
 			model_ = glm::rotate(model_, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-			int modelUn = glGetUniformLocation(program_, "model");
+			*/int modelUn = glGetUniformLocation(program_, "model");
 			glUniformMatrix4fv(modelUn, 1, GL_FALSE, glm::value_ptr(model_));
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -263,7 +265,7 @@ int main(int argc, char** argv)
 	gpr5300::HelloSquare scene_;
 	gpr5300::Engine engine(&scene_);
 	engine.Run();
-	std::cout << "end" << std::endl;
-	return 0;
+
+	return EXIT_SUCCESS;
 }
 

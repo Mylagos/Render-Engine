@@ -1,6 +1,8 @@
 #include "shader.h"
 #include <sstream>
 #include "stb_image.h"
+#include "glm/gtc/type_ptr.hpp"
+#include <GL/glew.h>
 
 Shader::Shader(const char* vertexPath, const char* fragmentPath)
 {
@@ -35,7 +37,8 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
     const char* fShaderCode = fragmentCode.c_str();
 
 
-    unsigned int vertex, fragment;
+    GLuint vertex = glewInit();
+	GLuint fragment = 0;
     int success;
     char infoLog[512];
 
@@ -51,9 +54,9 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
         std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
     };
 
-    // vertex Shader
-    fragment = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(fragment, 1, &vShaderCode, NULL);
+    // fragment Shader
+    fragment = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragment, 1, &fShaderCode, NULL);
     glCompileShader(fragment);
     // print compile errors if any
     glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
@@ -63,8 +66,9 @@ Shader::Shader(const char* vertexPath, const char* fragmentPath)
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     };
 
-
+    
     ID = glCreateProgram();
+
     glAttachShader(ID, vertex);
     glAttachShader(ID, fragment);
     glLinkProgram(ID);
@@ -98,6 +102,11 @@ void Shader::SetFloat(const std::string& name, float value) const
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 }
 
+void Shader::SetVec3(const std::string& name, glm::vec3 value) const
+{
+    glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(value));
+}
+
 void Shader::LoadTexture(std::string texName)
 {
     int width, height, nrChannels;
@@ -127,4 +136,24 @@ void Shader::LoadTexture(std::string texName)
 
     //FREE IMAGE FROM MEMORY
     stbi_image_free(data);
+
+    glUseProgram(ID);
+    glUniform1i(glGetUniformLocation(ID, "texture1"), 0); // set it manually
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture0);
+}
+
+void Shader::SetMat4(const std::string& name, glm::mat4 value) const
+{
+    glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void Shader::SetProjViewMat(glm::mat4 projection, glm::mat4 view)
+{
+    int projlUn = glGetUniformLocation(ID, "projection");
+    glUniformMatrix4fv(projlUn, 1, GL_FALSE, glm::value_ptr(projection));
+
+    int viewUn = glGetUniformLocation(ID, "view");
+    glUniformMatrix4fv(viewUn, 1, GL_FALSE, glm::value_ptr(view));
 }

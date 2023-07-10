@@ -178,7 +178,7 @@ namespace gpr5300
 				scene_->OnEvent(event);
 				ImGui_ImplSDL2_ProcessEvent(&event);
 			}
-			glClearColor(0, 0, 0, 0);
+			glClearColor(0.50, 0.50, 0.50, 0);
 			glClear(GL_COLOR_BUFFER_BIT);
 
 			camera_->Update(dt.count(), secondsSinceWindowIsOpen.count());
