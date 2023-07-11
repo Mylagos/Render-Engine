@@ -8,6 +8,8 @@
 
 class Shader
 {
+private:
+    int textureId_ = 0;
 public:
     // the program ID
     GLuint ID;

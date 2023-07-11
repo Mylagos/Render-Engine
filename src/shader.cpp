@@ -114,9 +114,9 @@ void Shader::LoadTexture(std::string texName)
     path << "data/textures/" << texName << ".jpg";
     unsigned char* data = stbi_load(path.str().c_str(), &width, &height, &nrChannels, 0);
 
-    unsigned int texture0;
-    glGenTextures(1, &texture0);
-    glBindTexture(GL_TEXTURE_2D, texture0);
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -138,10 +138,13 @@ void Shader::LoadTexture(std::string texName)
     stbi_image_free(data);
 
     glUseProgram(ID);
-    glUniform1i(glGetUniformLocation(ID, "texture1"), 0); // set it manually
+    std::ostringstream textureUniformName;
+    textureUniformName << "texture" << textureId_;
+    glUniform1i(glGetUniformLocation(ID, textureUniformName.str().c_str()), textureId_); // set it manually
+    textureId_ += 1;
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture0);
+    glActiveTexture(GL_TEXTURE0+textureId_);
+    glBindTexture(GL_TEXTURE_2D, texture);
 }
 
 void Shader::SetMat4(const std::string& name, glm::mat4 value) const
