@@ -31,6 +31,7 @@ namespace gpr5300
 		Shader lightShader_;
 		Cube litCube_;
 		Cube lightCube_;
+		Material myMaterial_;
 		Light myLight_;
 		float dt2 = 0;
 
@@ -39,21 +40,23 @@ namespace gpr5300
 	void HelloSquare::Begin()
 	{
 
-		myShader_ = Shader("data/shaders/hello_tutorial/Light.vert", "data/shaders/hello_tutorial/Light.frag");
-
-		lightShader_ = Shader("data/shaders/hello_tutorial/LightSource.vert", "data/shaders/hello_tutorial/LightSource.frag");
-		myLight_.SetGenericLight();
-
-
+		myShader_ = Shader("data/shaders/hello_lighting/LightMap.vert", "data/shaders/hello_lighting/LightMap.frag");
 		myShader_.Use();
-		Material myMaterial;
-		myMaterial.SetGenericMaterial();
-		myShader_.SetMaterial(myMaterial);
+		litCube_.CreateNormalMapCube();
+		
+		myMaterial_.SetGenericMaterial();
+		myMaterial_.textureName = "wall";
+		myMaterial_.specularTexName = "box_specular";
+		myMaterial_.texture0 = Shader::LoadTextureRet(myMaterial_.textureName);
+		myMaterial_.texture1 = Shader::LoadTextureRet(myMaterial_.specularTexName);
+		myShader_.SetInt("material.diffuse", 0);
+		myShader_.SetInt("material.specular", 1);
+		myShader_.SetFloat("material.shininess", myMaterial_.shininess);
 
-		litCube_.CreateNormalCube();
+		lightShader_ = Shader("data/shaders/hello_lighting/LightSource.vert", "data/shaders/hello_lighting/LightSource.frag");
 		lightCube_.CreateCube();
 
-		myShader_.LoadTexture("zizou_cropped");
+		myLight_.SetGenericLight();
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
@@ -70,27 +73,43 @@ namespace gpr5300
 			dt2 -= 6.3f;
 		}
 
-		lightPos_ = glm::vec3(1.0f * cos(dt2), 0.75f, 1.0f * sin(dt2));
+		lightPos_ = glm::vec3(1.0f * cos(dt2+1.5f), 0.75f, 1.0f * sin(dt2+1.5f));
 
-		myShader_.Use();
+
 		litCube_.Use();
+		myShader_.Use();
 		myShader_.SetVec3("viewPos", camPos_);
 		myShader_.SetVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
 		myLight_.position = lightPos_;
 		myShader_.SetLight(myLight_);
 
+		/*model_ = glm::mat4(1.0f);
+		model_ = glm::rotate(model_, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		model_ = glm::translate(model_, glm::vec3(0.0f, 0.0f, 0.0f));
+		if (dt2 > 1.0f && dt2 < 4.8f)
+		{
+			model_ = glm::rotate(model_, glm::radians((dt2 - 1.0f) * 95), glm::vec3(1.0f, 1.0f, 0.0f));
+		}*/
+		//model_ = glm::scale(model_, glm::vec3(0.5, 0.5, 0.5));
+
 		myShader_.SetProjViewMat(camProj_, camView_);
 		myShader_.SetMat4("model", model_);
 
 
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, myMaterial_.texture0);
+		
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, myMaterial_.texture1);
+
+
+		litCube_.Use();
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		litCube_.Unbind();
 
-		lightShader_.Use();
+
 		lightCube_.Use();
-
-		
-
+		lightShader_.Use();
 		lightModel_ = glm::mat4(1.0f);
 		lightModel_ = glm::translate(lightModel_, lightPos_);
 		lightModel_ = glm::scale(lightModel_, glm::vec3(0.2f));
@@ -98,7 +117,7 @@ namespace gpr5300
 
 		lightShader_.SetProjViewMat(camProj_, camView_);
 		lightShader_.SetMat4("model", lightModel_);
-
+		lightCube_.Use();
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		lightCube_.Unbind();
 	}

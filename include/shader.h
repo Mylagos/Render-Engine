@@ -25,8 +25,11 @@ public:
     void SetFloat(const std::string& name, float value) const;
     void SetVec3(const std::string& name, glm::vec3 value) const;
     void LoadTexture(std::string texName);
+    void LoadTexture(std::string texName, std::string uniformName);
+    static unsigned int LoadTextureRet(std::string texName);
     void SetMat4(const std::string& name, glm::mat4 value) const;
     void SetProjViewMat(glm::mat4 projection, glm::mat4 view);
     void SetMaterial(const Material material) const;
+    void SetMaterialWithTexture(Material material);
     void SetLight(const Light light) const;
 };

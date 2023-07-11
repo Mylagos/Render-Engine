@@ -39,9 +39,9 @@ namespace gpr5300
 	void HelloSquare::Begin()
 	{
 
-		myShader_ = Shader("data/shaders/hello_tutorial/LitObject.vert", "data/shaders/hello_tutorial/LitObject.frag");
+		myShader_ = Shader("data/shaders/hello_lighting/LitObject.vert", "data/shaders/hello_lighting/LitObject.frag");
 
-		lightShader_ = Shader("data/shaders/hello_tutorial/LightSource.vert", "data/shaders/hello_tutorial/LightSource.frag");
+		lightShader_ = Shader("data/shaders/hello_lighting/LightSource.vert", "data/shaders/hello_lighting/LightSource.frag");
 		myLight_.SetGenericLight();
 
 

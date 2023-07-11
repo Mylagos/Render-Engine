@@ -2,6 +2,10 @@
 
 struct Material
 {
+	unsigned int texture0;
+	unsigned int texture1;
+	std::string textureName;
+	std::string specularTexName;
 	glm::vec3 ambient;
 	glm::vec3 diffuse;
 	glm::vec3 specular;
@@ -12,6 +16,13 @@ struct Material
 	{
 		ambient = Ambient;
 		diffuse = Diffuse;
+		specular = Specular;
+		shininess = Shininess;
+	}
+	Material(std::string TextureName, std::string SpecularTextureName, glm::vec3 Specular, float Shininess)
+	{
+		specularTexName = SpecularTextureName;
+		textureName = TextureName;
 		specular = Specular;
 		shininess = Shininess;
 	}

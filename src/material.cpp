@@ -10,7 +10,7 @@ void Material::SetGenericMaterial()
 
 void Light::SetGenericLight()
 {
-	ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+	ambient = glm::vec3(0.35f, 0.35f, 0.35f);
 	diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
 	specular = glm::vec3(1.0f, 1.0f, 1.0f);
 }

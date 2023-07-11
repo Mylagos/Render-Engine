@@ -16,6 +16,7 @@ namespace gpr5300
 		void CreateCube();
 		void CreateTexturedCube();
 		void CreateNormalCube();
+		void CreateNormalMapCube();
 		void Use();
 		void Unbind();
 		Cube();
@@ -72,6 +73,27 @@ namespace gpr5300
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, thisCubeId);
+		glBindVertexArray(thisCubeId);
+	}
+
+	inline void Cube::CreateNormalMapCube()
+	{
+		glGenVertexArrays(1, &vao_);
+		glBindVertexArray(vao_);
+
+		unsigned int VBO;
+		glGenBuffers(1, &VBO);
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(CubeVerticesWithNormalAndTexture), CubeVerticesWithNormalAndTexture, GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glEnableVertexAttribArray(2);
 		glBindBuffer(GL_ARRAY_BUFFER, thisCubeId);
 		glBindVertexArray(thisCubeId);
 	}
