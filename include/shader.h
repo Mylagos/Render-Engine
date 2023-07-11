@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <SDL.h>
+#include "material.h"
 
 
 class Shader
@@ -24,4 +25,6 @@ public:
     void LoadTexture(std::string texName);
     void SetMat4(const std::string& name, glm::mat4 value) const;
     void SetProjViewMat(glm::mat4 projection, glm::mat4 view);
+    void SetMaterial(const Material material) const;
+    void SetLight(const Light light) const;
 };

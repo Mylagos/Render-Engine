@@ -151,9 +151,22 @@ void Shader::SetMat4(const std::string& name, glm::mat4 value) const
 
 void Shader::SetProjViewMat(glm::mat4 projection, glm::mat4 view)
 {
-    int projlUn = glGetUniformLocation(ID, "projection");
-    glUniformMatrix4fv(projlUn, 1, GL_FALSE, glm::value_ptr(projection));
+    SetMat4("projection", projection);
+    SetMat4("view", view);
+}
 
-    int viewUn = glGetUniformLocation(ID, "view");
-    glUniformMatrix4fv(viewUn, 1, GL_FALSE, glm::value_ptr(view));
+void Shader::SetMaterial(const Material material) const
+{
+	SetVec3("material.ambient", glm::vec3(0.1f) * material.ambient);
+    SetVec3("material.diffuse", glm::vec3(1.0f) * material.diffuse);
+    SetVec3("material.specular", glm::vec3(1.0f) * material.specular);
+    SetFloat("material.shininess", material.shininess);
+}
+
+void Shader::SetLight(const Light light) const
+{
+    SetVec3("light.position", light.position);
+    SetVec3("light.ambient", light.ambient);
+    SetVec3("light.diffuse", light.diffuse);
+    SetVec3("light.specular", light.specular);
 }
