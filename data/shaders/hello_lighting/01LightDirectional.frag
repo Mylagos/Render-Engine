@@ -9,21 +9,12 @@ struct Material {
   
   
   struct Light {
-    // Point light
-    vec3 position;
-    float constant;
-    float linear;
-    float quadratic;
-
     // Directional light
     vec3 direction;
-
 
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
-
-    int lightType;
 };
 
 out vec4 FragColor;
@@ -41,19 +32,10 @@ void main()
 {
   	vec3 ambient = light.ambient * texture(material.diffuse, TexCoords).rgb;
   	
-    vec3 norm = normalize(Normal);
-
-    vec3 lightDir;
-    if(light.lightType == 0)
-    {
-        float distance    = length(light.position - FragPos);
-        float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
-        lightDir = normalize(light.position - FragPos);
-    }
-    if(light.lightType == 1)
-    {
-        lightDir = normalize(-light.direction);
-    }
+    vec3 norm = normalize(Normal);    
+    
+    vec3 lightDir = normalize(-light.direction);
+    
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = light.diffuse * diff * texture(material.diffuse, TexCoords).rgb;  
     

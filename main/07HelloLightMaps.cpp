@@ -40,7 +40,7 @@ namespace gpr5300
 	void HelloSquare::Begin()
 	{
 
-		myShader_ = Shader("data/shaders/hello_lighting/LightMap.vert", "data/shaders/hello_lighting/LightMap.frag");
+		myShader_ = Shader("data/shaders/hello_lighting/LightMap.vert", "data/shaders/hello_lighting/04LightSpotSoft.frag");
 		myShader_.Use();
 		litCube_.CreateNormalMapCube();
 		
@@ -52,6 +52,13 @@ namespace gpr5300
 		myShader_.SetInt("material.diffuse", 0);
 		myShader_.SetInt("material.specular", 1);
 		myShader_.SetFloat("material.shininess", myMaterial_.shininess);
+		/*myShader_.SetVec3("light.direction", glm::vec3( - 0.2f, -1.0f, -0.3f));*/
+		myShader_.SetVec3("light.position", camPos_);
+		myShader_.SetVec3("light.direction", camFront_);
+		myShader_.SetFloat("light.constant", 1.0f);
+		myShader_.SetFloat("light.linear", 0.09f);
+		myShader_.SetFloat("light.quadratic", 0.032f);
+		myShader_.SetFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
 
 		lightShader_ = Shader("data/shaders/hello_lighting/LightSource.vert", "data/shaders/hello_lighting/LightSource.frag");
 		lightCube_.CreateCube();
@@ -63,6 +70,19 @@ namespace gpr5300
 
 	void HelloSquare::Update(float dt)
 	{
+		myShader_.Use();
+		myShader_.SetVec3("light.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
+		myShader_.SetVec3("light.diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
+		myShader_.SetVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+		myShader_.SetVec3("light.position", camPos_);
+		myShader_.SetVec3("light.direction", camFront_);
+		myShader_.SetFloat("light.constant", 1.0f);
+		myShader_.SetFloat("light.linear", 0.09f);
+		myShader_.SetFloat("light.quadratic", 0.032f);
+
+		myShader_.SetFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+		myShader_.SetFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
 
@@ -77,20 +97,11 @@ namespace gpr5300
 
 
 		litCube_.Use();
-		myShader_.Use();
+
 		myShader_.SetVec3("viewPos", camPos_);
 		myShader_.SetVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
 		myLight_.position = lightPos_;
-		myShader_.SetLight(myLight_);
-
-		/*model_ = glm::mat4(1.0f);
-		model_ = glm::rotate(model_, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		model_ = glm::translate(model_, glm::vec3(0.0f, 0.0f, 0.0f));
-		if (dt2 > 1.0f && dt2 < 4.8f)
-		{
-			model_ = glm::rotate(model_, glm::radians((dt2 - 1.0f) * 95), glm::vec3(1.0f, 1.0f, 0.0f));
-		}*/
-		//model_ = glm::scale(model_, glm::vec3(0.5, 0.5, 0.5));
+		//myShader_.SetLight(myLight_);
 
 		myShader_.SetProjViewMat(camProj_, camView_);
 		myShader_.SetMat4("model", model_);
