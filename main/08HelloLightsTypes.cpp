@@ -4,10 +4,12 @@
 #include <sstream>
 #include <GL/glew.h>
 #include <glm/matrix.hpp>
+#include <FileSystem>
 
 #include "engine.h"
 #include "scene.h"
 #include "cube.h"
+#include "model.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -29,8 +31,8 @@ namespace gpr5300
 		glm::vec3 lightPos_ = glm::vec3(1.0f, 1.0f, 0.0f);
 		Shader myShader_;
 		Shader lightShader_;
-		Cube litCube_;
 		Cube lightCube_;
+		Model myModel;
 		Material myMaterial_;
 		Light myLight_;
 		float dt2 = 0;
@@ -40,20 +42,12 @@ namespace gpr5300
 	void HelloSquare::Begin()
 	{
 
-		myShader_ = Shader("data/shaders/hello_lighting/LightMap.vert", "data/shaders/hello_lighting/00MultipleLights.frag");
+		myShader_ = Shader("data/shaders/hello_lighting/LightMap.vert", "data/shaders/hello_lighting/02LightPoint.frag");
 		myShader_.Use();
-		litCube_.CreateNormalMapCube();
-		
+		myModel = Model("data/model/backpack/backpack.obj");
 		myMaterial_.SetGenericMaterial();
-		myMaterial_.textureName = "wall";
-		myMaterial_.specularTexName = "box_specular";
-		myMaterial_.texture0 = Shader::LoadTextureRet(myMaterial_.textureName);
-		myMaterial_.texture1 = Shader::LoadTextureRet(myMaterial_.specularTexName);
-		myShader_.SetInt("material.diffuse", 0);
-		myShader_.SetInt("material.specular", 1);
-		myShader_.SetFloat("material.shininess", myMaterial_.shininess);
+		myShader_.SetFloat("material.shininess", 100.0f);
 		/*myShader_.SetVec3("light.direction", glm::vec3( - 0.2f, -1.0f, -0.3f));*/
-		myShader_.SetFloat("pointLights[0].constant", 1.0f);
 
 		lightShader_ = Shader("data/shaders/hello_lighting/LightSource.vert", "data/shaders/hello_lighting/LightSource.frag");
 		lightCube_.CreateCube();
@@ -88,30 +82,19 @@ namespace gpr5300
 			dt2 -= 6.3f;
 		}
 
-		lightPos_ = glm::vec3(1.0f * cos(dt2+1.5f), 0.75f, 1.0f * sin(dt2+1.5f));
+		lightPos_ = glm::vec3(2.0f * cos(dt2+1.5f), 0.75f, 2.0f * sin(dt2+1.5f));
 
-
-		litCube_.Use();
 
 		myShader_.SetVec3("viewPos", camPos_);
 		myShader_.SetVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
 		myLight_.position = lightPos_;
-		//myShader_.SetLight(myLight_);
+		myShader_.SetLight(myLight_);
 
 		myShader_.SetProjViewMat(camProj_, camView_);
 		myShader_.SetMat4("model", model_);
 
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, myMaterial_.texture0);
-		
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, myMaterial_.texture1);
-
-
-		litCube_.Use();
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		litCube_.Unbind();
+		myModel.Draw(myShader_);
 
 
 		lightCube_.Use();
