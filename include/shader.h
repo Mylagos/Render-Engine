@@ -29,6 +29,7 @@ public:
     void LoadTexture(std::string texName, std::string uniformName);
     static unsigned int LoadTextureRet(std::string texName);
     void SetMat4(const std::string& name, glm::mat4 value) const;
+    void SetMat3(const std::string& name, glm::mat3 value) const;
     void SetProjViewMat(glm::mat4 projection, glm::mat4 view);
     void SetMaterial(const Material material) const;
     void SetMaterialWithTexture(Material material);
