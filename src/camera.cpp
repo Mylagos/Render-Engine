@@ -9,61 +9,61 @@ namespace gpr5300
 	void gpr5300::Camera::Update(float dt, float engineTime)
 	{
 		CameraPositionUpdate(dt);
-		view_ = glm::lookAt(cameraPos_, cameraPos_ + cameraFront_, cameraUp_);
+		view_ = glm::lookAt(CameraPos, CameraPos + cameraFront_, cameraUp_);
 	}
 
 	void Camera::CameraPositionUpdate(float dt)
 	{
 		if (movements_.KeyPressed_D)
 		{
-			cameraPos_ += glm::normalize(glm::cross(cameraFront_, cameraUp_)) * cameraSpeed_ * dt;
+			CameraPos += glm::normalize(glm::cross(cameraFront_, cameraUp_)) * cameraSpeed_ * dt;
 		}
 		if (movements_.KeyPressed_A)
 		{
-			cameraPos_ -= glm::normalize(glm::cross(cameraFront_, cameraUp_)) * cameraSpeed_ * dt;
+			CameraPos -= glm::normalize(glm::cross(cameraFront_, cameraUp_)) * cameraSpeed_ * dt;
 		}
 		if (movements_.KeyPressed_E)
 		{
-			cameraPos_.y += cameraSpeed_ * dt;
+			CameraPos.y += cameraSpeed_ * dt;
 		}
 		if (movements_.KeyPressed_C)
 		{
-			cameraPos_.y -= cameraSpeed_ * dt;
+			CameraPos.y -= cameraSpeed_ * dt;
 		}
 		if (movements_.KeyPressed_S)
 		{
-			cameraPos_ -= cameraSpeed_ * cameraFront_ * dt;
+			CameraPos -= cameraSpeed_ * cameraFront_ * dt;
 		}
 		if (movements_.KeyPressed_W)
 		{
-			cameraPos_ += cameraSpeed_ * cameraFront_ * dt;
+			CameraPos += cameraSpeed_ * cameraFront_ * dt;
 		}
 		if (movements_.KeyPressed_RIGHT)
 		{
-			yaw_ += 65.0f * dt;
+			Yaw += 65.0f * dt;
 		}
 		if (movements_.KeyPressed_LEFT)
 		{
-			yaw_ -= 65.0f * dt;
+			Yaw -= 65.0f * dt;
 		}
 		if (movements_.KeyPressed_UP)
 		{
-			pitch_ += 65.0f * dt;
+			Pitch += 65.0f * dt;
 		}
 		if (movements_.KeyPressed_DOWN)
 		{
-			pitch_ -= 65.0f * dt;
+			Pitch -= 65.0f * dt;
 		}
 
-		if (pitch_ > 89.0f)
-			pitch_ = 89.0f;
-		if (pitch_ < -89.0f)
-			pitch_ = -89.0f;
-		glm::vec3 direction_;
-		direction_.x = cos(glm::radians(yaw_)) * cos(glm::radians(pitch_));
-		direction_.y = sin(glm::radians(pitch_));
-		direction_.z = sin(glm::radians(yaw_)) * cos(glm::radians(pitch_));
-		cameraFront_ = glm::normalize(direction_);
+		if (Pitch > 89.0f)
+			Pitch = 89.0f;
+		if (Pitch < -89.0f)
+			Pitch = -89.0f;
+		glm::vec3 direction;
+		direction.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+		direction.y = sin(glm::radians(Pitch));
+		direction.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+		cameraFront_ = glm::normalize(direction);
 	}
 
 	void Camera::CameraEventsKey(SDL_Event event, bool isDown)
@@ -178,13 +178,11 @@ namespace gpr5300
 						cameraSpeed_ *= 0.5f;
 					}
 				}
-				std::cout << cameraRotationSpeed_ << std::endl;
 			}
 			else if (movements_.KeyPressed_2 == true && !isDown)
 			{
 				movements_.KeyPressed_2 = false;
 			}
-			std::cout << cameraRotationSpeed_ << std::endl;
 			break;
 		}
 		default:
@@ -196,8 +194,7 @@ namespace gpr5300
 
 	void Camera::CameraMouseMovement(float mouseX, float mouseY, float dt)
 	{
-		std::cout << mouseX << " " << mouseY << std::endl;
-		yaw_ += mouseX * cameraRotationSpeed_ * dt;
-		pitch_ += mouseY * cameraRotationSpeed_ * dt;
+		Yaw += mouseX * cameraRotationSpeed_ * dt;
+		Pitch += mouseY * cameraRotationSpeed_ * dt;
 	}
 };

@@ -40,6 +40,10 @@ namespace gpr5300
 
 		float longestFrame = 0.0f;
 
+		unsigned int i = 0;
+		float milisecondCounter = 0;
+		float millisecondDisplay = 0;
+
 		while (isOpen)
 		{
 
@@ -75,25 +79,36 @@ namespace gpr5300
 				m_tempFps = 0;
 			}
 
+			i++;
+			milisecondCounter += dt.count();
+			if(i >= 50)
+			{
+				i = 0;
+				milisecondCounter /= 50;
+				millisecondDisplay = milisecondCounter * 1000;
+				milisecondCounter = 0;
+			}
+
 			//Do something with the fps
-			auto fpsc = "FPS: " + std::to_string(fps) + " Time to Load : " + std::to_string(timeToLoad_);
-			const char* ooo = fpsc.c_str();
-			SDL_SetWindowTitle(window_, ooo);
+			auto fpsc = "INFO! Miliseconds : " + std::to_string(static_cast<int>(millisecondDisplay)) + "ms. FramesPerSecond : " + std::to_string(static_cast<int>(fps))
+
+			+ " TimeToLoad : " + std::to_string(static_cast<int>(timeToLoad_ * 1000.0f)) + "ms.";
+
+			const char* winName = fpsc.c_str();
+			SDL_SetWindowTitle(window_, winName);
 
 
 			int width;
 			int height;
 			SDL_GetWindowSize(window_, &width, &height);
 
-			proj_ = glm::mat4(1.0f);
-			proj_ = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
-			view_ = glm::mat4(1.0f);
-			view_ = camera_->view_;
+			proj_ = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100000.0f);
 
+			view_ = camera_->view_;
 
 			scene_->camProj_ = proj_;
 			scene_->camView_ = view_;
-			scene_->camPos_ = camera_->GetCameraPos();
+			scene_->camPos_ = camera_->CameraPos;
 			scene_->camFront_ = camera_->GetCameraFront();
 			//Manage SDL event
 
@@ -256,8 +271,14 @@ namespace gpr5300
 		camera_ = new Camera();
 
 		scene_->Begin();
-		scene_->camPos_ = camera_->GetCameraPos();
-		scene_->camFront_ = camera_->GetCameraFront();
+		//if ((scene_->yaw_ != 0.0f && scene_->pitch_ != 0.0f) || scene_->camPos_ != glm::vec3(1.0f))
+		
+		camera_->Yaw = scene_->yaw_;
+		camera_->Pitch = scene_->pitch_;
+		camera_->CameraPos = scene_->camPos_;
+		
+		/*scene_->camPos_ = camera_->GetCameraPos();
+		scene_->camFront_ = camera_->GetCameraFront();*/
 	}
 
 	void Engine::End()

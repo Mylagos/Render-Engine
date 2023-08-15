@@ -53,6 +53,8 @@ namespace gpr5300
 		litCube_.CreateNormalCube();
 		lightCube_.CreateCube();
 
+		model_ = glm::scale(model_, glm::vec3(3.0f));
+
 		myShader_.LoadTexture("zizou_cropped");
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -70,7 +72,7 @@ namespace gpr5300
 			dt2 -= 6.3f;
 		}
 
-		lightPos_ = glm::vec3(1.0f * cos(dt2), 0.75f, 1.0f * sin(dt2));
+		lightPos_ = glm::vec3(4.0f * cos(dt2), 0.75f, 4.0f * sin(dt2));
 
 		myShader_.Use();
 		litCube_.Use();

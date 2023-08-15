@@ -8,6 +8,9 @@
 #include "file_utility.h"
 #include "scene.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 namespace gpr5300
 {
 	class HelloSquare final : public Scene

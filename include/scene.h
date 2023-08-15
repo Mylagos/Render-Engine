@@ -16,10 +16,13 @@ namespace gpr5300
         virtual void DrawImGui() {}
         virtual void OnEvent(const SDL_Event& event) {}
 
+
         glm::mat4 camProj_ = glm::mat4(1.0f);
         glm::mat4 camView_ = glm::mat4(1.0f);
-        glm::vec3 camPos_ = glm::vec3(1.0f);
-        glm::vec3 camFront_ = glm::vec3(1.0f);
+        glm::vec3 camPos_ = glm::vec3(0.0f, 0.0f, 3.0f);
+        glm::vec3 camFront_ = glm::vec3(0.0f, 0.0f, -1.0f);
+        float yaw_ = 275.0f;
+        float pitch_ = 0.0f;
     };
 
 } // namespace gpr5300
